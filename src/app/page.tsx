@@ -18,7 +18,7 @@ import hehehe from "@/assets/photos/hehehehehehe.svg";
 import hahaha from "@/assets/photos/hjahhaahhaha.svg";
 import { AccordionDemo } from "@/components/Acordeon";
 
-import footer from "@/assets/photos/Group 31.svg"
+import footer from "@/assets/photos/Group 31.svg";
 // import devicemesage from "@/assets/Logos/device-message.png"
 // import { CarouselDoctor } from "@/components/Carrossel";
 // import ToggleSwitch from "@/components/Switch";
@@ -60,18 +60,15 @@ export default function Home() {
             </form>
           </div>
 
-
-          <div className="w-[279px] h-[317px]">
-            <Image
+          {/* <div className="w-[279px] h-[317px]"> */}
+          <Image
             className=""
             src={loiraCortada}
             width={279}
             height={317}
             alt=""
           />
-          </div>
-
-          
+          {/* </div> */}
         </div>
       </div>
       <div className="w-full h-[78px] bg-[#0F2167] p-5 mt-[-40px]">
@@ -136,15 +133,8 @@ export default function Home() {
               Agende sua consulta
             </button>
 
-            <Image 
-              src={footer}
-              width={392}
-              height={71}
-              alt=""
-            />
+            <Image src={footer} width={392} height={71} alt="" />
           </div>
-
-          
         </div>
       </div>
     </div>
