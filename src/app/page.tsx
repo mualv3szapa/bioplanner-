@@ -39,7 +39,7 @@ export default function Home() {
         <Image src={Texto1} width={334} height={69} alt="" />
 
         <div className="flex flex-row w-full">
-          <div className="flex flex-col gap-2 mt-[20px]  w-[230px]">
+          <div className="flex flex-col gap-2 mt-[20px]  w-[180px]">
             <form action="">
               <div>
                 <SwitchRed />
