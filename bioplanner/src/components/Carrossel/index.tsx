@@ -1,72 +1,75 @@
-"use client";
+import * as React from "react";
 
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import Image from "next/image";
+import cardCarousel from "@/assets/photos/cardcarousel.svg";
+import doutora from "@/assets/photos/douturaDeolane.png";
+import { MapPin } from "lucide-react";
+import roulete from "@/assets/photos/roulete.svg"
 
-import doctorPhoto from "@/assets/photos/douturaDeolane.png"; // exemplo
-
-export default function DoctorCarousel() {
-  const doctors = [
-    {
-      name: "Dra. Ellen",
-      specialty: "Dermatologista",
-      location: "Moema, SP",
-      distance: "3,0km",
-      photo: doctorPhoto,
-    },
-    {
-      name: "Dr. João",
-      specialty: "Cardiologista",
-      location: "Pinheiros, SP",
-      distance: "2,5km",
-      photo: doctorPhoto,
-    },
-    {
-      name: "Dra. Maria",
-      specialty: "Pediatra",
-      location: "Vila Mariana, SP",
-      distance: "4,1km",
-      photo: doctorPhoto,
-    },
-  ];
-
+export function CarouselDemo() {
   return (
-    <div className="w-full max-w-lg mx-auto">
-      <Swiper
-        modules={[Navigation, Pagination]}
-        spaceBetween={30}
-        slidesPerView={1}
-        navigation
-        pagination={{ clickable: true }}
-        loop
-        className="rounded-2xl"
-      >
-        {doctors.map((doctor, index) => (
-          <SwiperSlide key={index}>
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-              <div className="relative w-full h-72">
-                <Image
-                  src={doctor.photo}
-                  alt={doctor.name}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-4 flex justify-between items-center">
-                <div>
-                  <h2 className="text-lg font-bold text-blue-900">{doctor.name}</h2>
-                  <p className="text-gray-700">{doctor.specialty}</p>
-                  <p className="text-sm text-gray-500">📍 {doctor.location}</p>
-                </div>
-                <span className="text-sm font-semibold text-blue-700">
-                  {doctor.distance}
-                </span>
-              </div>
+    <Carousel className="w-[60%] max-w-xs mt-5">
+      <CarouselContent>
+        {Array.from({ length: 5 }).map((_, index) => (
+          <CarouselItem key={index}>
+            <div className="p-1">
+              <Card>
+                <CardContent className="flex flex-col aspect-square items-center justify-center p-6 w-full h-full ">
+                  <Image src={doutora} width={400} height={312} alt="sdsd" />
+
+                  <div className="bg-[#F7F7F7] w-full flex flex-row gap-[60px]">
+                    <div>
+                      <h1 className="text-[#0F2167] font-bold text-[20px]">Dra. Ellen</h1>
+                      <p className="text-[14px] font-thin">Dermatologista</p>
+
+                      <div className="flex flex-row">
+                        <MapPin color="red" size={14}/>
+                        <p className="text-[#0F2167] font-thin text-[10px]">Moema-sp</p>
+                      </div>
+                    </div>
+
+                    <p>3,0km</p>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
-          </SwiperSlide>
+          </CarouselItem>
         ))}
-      </Swiper>
-    </div>
+      </CarouselContent>
+      <CarouselPrevious />
+      <CarouselNext />
+    </Carousel>
+  );
+}
+export function Carousel2() {
+  return (
+    <Carousel className="w-[60%] max-w-xs mt-5">
+      <CarouselContent>
+        {Array.from({ length: 5 }).map((_, index) => (
+          <CarouselItem key={index}>
+            <div className="p-1">
+              <Card>
+                <Image 
+                  src={roulete}
+                  width={239}
+                  height={249}
+                  alt=""
+                />
+              </Card>
+            </div>
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <CarouselPrevious />
+      <CarouselNext />
+    </Carousel>
   );
 }
