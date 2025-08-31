@@ -61,13 +61,13 @@ export default function Home() {
           </div>
 
           {/* <div className="w-[279px] h-[317px]"> */}
-          <Image
+          {/* <Image
             className=""
             src={loiraCortada}
             width={279}
             height={317}
             alt=""
-          />
+          /> */}
           {/* </div> */}
         </div>
       </div>
