@@ -39,7 +39,7 @@ export default function Home() {
         <Image src={Texto1} width={334} height={69} alt="" />
 
         <div className="flex flex-row w-full">
-          <div className="flex flex-col gap-2 mt-[20px]  w-[180px]">
+          <div className="flex flex-col gap-2 mt-[20px]  w-[230px]">
             <form action="">
               <div>
                 <SwitchRed />
@@ -61,13 +61,13 @@ export default function Home() {
           </div>
 
           {/* <div className="w-[279px] h-[317px]"> */}
-          <Image
+          {/* <Image
             className=""
             src={loiraCortada}
             width={279}
             height={317}
             alt=""
-          />
+          /> */}
           {/* </div> */}
         </div>
       </div>
