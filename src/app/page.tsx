@@ -60,13 +60,18 @@ export default function Home() {
             </form>
           </div>
 
-          <Image
+
+          <div className="w-[279px] h-[317px]">
+            <Image
             className=""
             src={loiraCortada}
             width={279}
             height={317}
             alt=""
           />
+          </div>
+
+          
         </div>
       </div>
       <div className="w-full h-[78px] bg-[#0F2167] p-5 mt-[-40px]">
