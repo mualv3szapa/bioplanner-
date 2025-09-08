@@ -1,98 +1,72 @@
-"use client";
-import { useState } from "react";
+// src/components/StyledSwitch.tsx
+import React from "react";
 
-interface SwitchRedProps {
-  value: "online" | "presencial";
-  onChange: (val: "online" | "presencial") => void;
+interface StyledSwitchProps<T extends string> {
+  options: { value: T; label: string }[];
+  selectedValue: T;
+  onValueChange: (value: T) => void;
+  theme: "red" | "blue";
 }
 
-export const SwitchRed = ({ value, onChange }: SwitchRedProps) => {
-  const [selected, setSelected] = useState<"online" | "presencial">("online");
+// Ícone de checkmark para usar nos botões
+const CheckIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 20 20"
+    fill="currentColor"
+    className="w-4 h-4 ml-1.5"
+  >
+    <path
+      fillRule="evenodd"
+      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+
+export function StyledSwitch<T extends string>({
+  options,
+  selectedValue,
+  onValueChange,
+  theme,
+}: StyledSwitchProps<T>) {
+  const baseClasses =
+    "flex items-center justify-center w-1/2 py-2 px-4 text-sm font-semibold transition-all duration-300 rounded-full";
+
+  const themeClasses = {
+    red: {
+      container: "border-red-200",
+      selected: "bg-[#FF1935] text-white shadow-md",
+      unselected: "text-gray-500",
+    },
+    blue: {
+      container: "border-blue-200",
+      selected: "bg-[#0F2167] text-white shadow-md",
+      unselected: "text-gray-500",
+    },
+  };
+
+  const currentTheme = themeClasses[theme];
 
   return (
-    <div className="relative flex w-full max-w-[260px] xs:max-w-[320px] sm:max-w-[380px] rounded-full border border-[#FF1935] bg-white">
-      {/* Fundo animado */}
-      <div
-        className={`absolute top-0 h-full w-1/2 rounded-full bg-[#FF1935] transition-all duration-300 ${
-          selected === "online" ? "left-0" : "left-1/2"
-        }`}
-      />
-
-      {/* Botão Online */}
-      <button
-        onClick={() => setSelected("online")}
-        className={`relative z-10 flex-1 rounded-full px-3 xs:px-4 py-2 
-                    h-[clamp(50px,7vw,60px)] 
-                    text-[clamp(14px,3.5vw,16px)] font-medium 
-                    transition-colors duration-300 ${
-                      selected === "online" ? "text-white" : "text-[#FF1935]"
-                    }`}
-        type="button"
-      >
-        Online
-      </button>
-
-      {/* Botão Presencial */}
-      <button
-        onClick={() => setSelected("presencial")}
-        className={`relative z-10 flex-1 rounded-full px-3 xs:px-4 py-2 
-                    h-[clamp(50px,7vw,60px)] 
-                    text-[clamp(14px,3.5vw,16px)] font-medium 
-                    transition-colors duration-300 ${
-                      selected === "presencial"
-                        ? "text-white"
-                        : "text-[#FF1935]"
-                    }`}
-        type="button"
-      >
-        Presencial
-      </button>
+    <div
+      className={`relative flex w-full max-w-[380px] p-1 bg-white border ${currentTheme.container} rounded-full shadow-inner`}
+    >
+      {options.map((option) => (
+        <button
+          key={option.value}
+          type="button"
+          onClick={() => onValueChange(option.value)}
+          className={`${baseClasses} ${
+            selectedValue === option.value
+              ? currentTheme.selected
+              : currentTheme.unselected
+          }`}
+        >
+          {option.label}
+          {selectedValue === option.value && <CheckIcon />}
+        </button>
+      ))}
     </div>
   );
-};
-
-interface SwitchBlueProps {
-  value: "particular" | "convenio";
-  onChange: (val: "particular" | "convenio") => void;
 }
-
-export const SwitchBlue = ({ value, onChange }: SwitchBlueProps) => {
-  return (
-    <div className="relative flex w-full max-w-[260px] xs:max-w-[320px] sm:max-w-[380px] rounded-full border border-[#0F2167] bg-white">
-      {/* Fundo animado */}
-      <div
-        className={`absolute top-0 h-full w-1/2 rounded-full bg-[#0F2167] transition-all duration-300 ${
-          value === "particular" ? "left-0" : "left-1/2"
-        }`}
-      />
-
-      {/* Botão Particular */}
-      <button
-        onClick={() => onChange("particular")}
-        className={`relative z-10 flex-1 rounded-full px-3 xs:px-4 py-2 
-                    h-[clamp(50px,7vw,60px)] 
-                    text-[clamp(14px,3.5vw,16px)] font-medium 
-                    transition-colors duration-300 ${
-                      value === "particular" ? "text-white" : "text-[#0F2167]"
-                    }`}
-        type="button"
-      >
-        Particular
-      </button>
-
-      {/* Botão Convênio */}
-      <button
-        onClick={() => onChange("convenio")}
-        className={`relative z-10 flex-1 rounded-full px-3 xs:px-4 py-2 
-                    h-[clamp(50px,7vw,60px)] 
-                    text-[clamp(14px,3.5vw,16px)] font-medium 
-                    transition-colors duration-300 ${
-                      value === "convenio" ? "text-white" : "text-[#0F2167]"
-                    }`}
-        type="button"
-      >
-        Convênio
-      </button>
-    </div>
-  );
-};

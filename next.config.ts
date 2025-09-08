@@ -5,7 +5,6 @@ const isProd = process.env.NODE_ENV === "production";
 const repoName = "bioplanner-";
 
 const nextConfig: NextConfig = {
-  output: "export",
   images: { unoptimized: true },
   basePath: isProd ? `/${repoName}` : undefined,
   assetPrefix: isProd ? `/${repoName}/` : undefined,

@@ -1,6 +1,4 @@
-import * as React from "react";
-
-import { Card, CardContent } from "@/components/ui/card";
+import Image from "next/image";
 import {
   Carousel,
   CarouselContent,
@@ -8,78 +6,22 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import Image from "next/image";
-import cardCarousel from "@/assets/photos/cardcarousel.svg";
-import doutora from "@/assets/photos/douturaDeolane.png";
-import { MapPin } from "lucide-react";
-import roulete from "@/assets/photos/roulete.svg";
 
-export function CarouselDemo() {
-  return (
-    <Carousel className="w-[60%] max-w-xs mt-5">
-      <CarouselContent>
-        {Array.from({ length: 5 }).map((_, index) => (
-          <CarouselItem key={index}>
-            <div className="p-1">
-              <Card>
-                <CardContent className="flex flex-col aspect-square items-center justify-center p-6 w-full h-full ">
-                  <Image src={doutora} width={400} height={312} alt="sdsd" />
+// Tipagens (é bom ter aqui também para o componente ser independente)
+type PhysicianAddress = {
+  id: number;
+  street: string;
+  number: string;
+  district: string;
+  city: { name: string; state: { id: string } };
+  cep: string;
+  distance?: number;
+};
 
-                  <div className="bg-[#F7F7F7] w-full flex flex-row gap-[60px]">
-                    <div>
-                      <h1 className="text-[#0F2167] font-bold text-[20px]">
-                        Dra. Ellen
-                      </h1>
-                      <p className="text-[14px] font-thin">Dermatologista</p>
-
-                      <div className="flex flex-row">
-                        <MapPin color="red" size={14} />
-                        <p className="text-[#0F2167] font-thin text-[10px]">
-                          Moema-sp
-                        </p>
-                      </div>
-                    </div>
-
-                    <p>3,0km</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
-  );
-}
-export function Carousel2() {
-  return (
-    <Carousel className="w-[60%] max-w-xs mt-5">
-      <CarouselContent>
-        {Array.from({ length: 5 }).map((_, index) => (
-          <CarouselItem key={index}>
-            <div className="p-1">
-              <Card>
-                <Image src={roulete} width={239} height={249} alt="" />
-              </Card>
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
-  );
-}
-
-// Tipagem básica
 type Physician = {
   id: number;
   name: string;
-  addresses: {
-    city: { name: string; state: { id: string } };
-  }[];
+  addresses: PhysicianAddress[];
 };
 
 interface CarouselDoctorsProps {
@@ -88,85 +30,86 @@ interface CarouselDoctorsProps {
 
 export function CarouselDoctors({ physicians }: CarouselDoctorsProps) {
   return (
-    <Carousel opts={{ align: "start" }} className="w-full max-w-6xl mx-auto">
-      <CarouselContent>
-        {physicians.map((physician) => {
-          const address = physician.addresses[0];
-
-          return (
-            <CarouselItem
-              key={physician.id}
-              className="sm:basis-1/1 md:basis-1/2 lg:basis-1/3"
-            >
-              <Card className="rounded-2xl overflow-hidden shadow-md">
-                {/* Imagem do médico */}
-                <div className="relative w-full h-64">
+    <div className="w-full py-10">
+      <Carousel
+        opts={{
+          align: "start",
+          loop: physicians.length > 2, // Ativa o loop se houver mais de 2 médicos
+        }}
+        className="w-full max-w-6xl mx-auto"
+      >
+        <CarouselContent className="-ml-4">
+          {physicians.map((physician) => {
+            const address = physician.addresses[0];
+            return (
+              <CarouselItem
+                key={physician.id}
+                className="pl-4 sm:basis-1/2 lg:basis-1/3"
+              >
+                <div className="relative rounded-2xl overflow-hidden shadow-lg bg-gray-200 aspect-[3/4]">
+                  {/* Imagem de Fundo */}
                   <Image
-                    src="/doctor-placeholder.jpg" // 🔥 troca pela imagem da API se tiver
-                    alt={physician.name}
+                    src="/doctor-placeholder.jpg" // Use uma imagem placeholder
+                    alt={`Foto de ${physician.name}`}
                     fill
                     className="object-cover"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
 
                   {/* Logo no canto superior direito */}
-                  <div className="absolute top-3 right-3 bg-white rounded-full p-1 shadow">
+                  <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm rounded-full p-1.5 shadow">
                     <Image
-                      src="/logo-small.png" // 🔥 troca pelo logo da Bioplanner
+                      src="/logo-small.png"
                       alt="Bioplanner"
-                      width={28}
-                      height={28}
+                      width={24}
+                      height={24}
                     />
                   </div>
-                </div>
 
-                {/* Área de informações */}
-                <div className="bg-white p-4 flex flex-col gap-1">
-                  <h3 className="font-bold text-[#0F2167] text-lg">
-                    Dra. {physician.name}
-                  </h3>
-                  <span className="text-sm text-gray-600">Dermatologista</span>
-
-                  {/* Localização */}
-                  {address && (
-                    <div className="flex items-center gap-1 text-sm text-[#FF1935] mt-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        stroke="currentColor"
-                        className="w-4 h-4"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 21c4.418 0 8-4.03 8-9s-3.582-9-8-9-8 4.03-8 9 3.582 9 8 9z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 12a2.25 2.25 0 100-4.5A2.25 2.25 0 0012 12z"
-                        />
-                      </svg>
-                      <span>
-                        {address.city.name}, {address.city.state.id}
-                      </span>
+                  {/* Overlay de informações na parte inferior */}
+                  <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 via-black/50 to-transparent">
+                    <div className="bg-white/90 backdrop-blur-md rounded-xl p-4 shadow-md">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="font-bold text-[#0F2167] text-xl truncate">
+                            Dra. {physician.name}
+                          </h3>
+                          <span className="text-sm text-gray-600">
+                            Dermatologista
+                          </span>
+                        </div>
+                        {address?.distance !== undefined && (
+                          <span className="text-sm font-semibold text-gray-700 whitespace-nowrap">
+                            {address.distance.toFixed(1)}km
+                          </span>
+                        )}
+                      </div>
+                      {address && (
+                        <div className="flex items-center gap-1.5 text-sm text-gray-700 mt-2">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            className="w-5 h-5 text-[#FF1935]"
+                          >
+                            <path d="M9.653 16.915l-.005-.003-.019-.01a20.759 20.759 0 01-1.162-.682 22.045 22.045 0 01-2.582-1.9-22.045 22.045 0 01-2.582-1.9A20.759 20.759 0 013 12.499V7h14v5.5c0 .81-.12 1.603-.347 2.353a20.759 20.759 0 01-1.162.682 22.045 22.045 0 01-2.582 1.9-22.045 22.045 0 01-2.582 1.9l-.019.01-.005.003h-.002a.739.739 0 01-.69.001l-.002-.001z" />
+                            <path d="M10 9a2 2 0 100-4 2 2 0 000 4z" />
+                          </svg>
+                          <span className="font-medium">
+                            {address.city.name}, {address.city.state.id}
+                          </span>
+                        </div>
+                      )}
                     </div>
-                  )}
-
-                  {/* Distância mockada (vamos calcular depois) */}
-                  <span className="text-right text-sm font-semibold text-gray-700">
-                    3,0 km
-                  </span>
+                  </div>
                 </div>
-              </Card>
-            </CarouselItem>
-          );
-        })}
-      </CarouselContent>
-
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+              </CarouselItem>
+            );
+          })}
+        </CarouselContent>
+        <CarouselPrevious className="ml-[-12px] md:ml-[-24px]" />
+        <CarouselNext className="mr-[-12px] md:mr-[-24px]" />
+      </Carousel>
+    </div>
   );
 }
