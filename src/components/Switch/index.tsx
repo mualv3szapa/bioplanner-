@@ -1,4 +1,3 @@
-// src/components/StyledSwitch.tsx
 import React from "react";
 
 interface StyledSwitchProps<T extends string> {
@@ -8,7 +7,6 @@ interface StyledSwitchProps<T extends string> {
   theme: "red" | "blue";
 }
 
-// Ícone de checkmark para usar nos botões
 const CheckIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -49,8 +47,10 @@ export function StyledSwitch<T extends string>({
   const currentTheme = themeClasses[theme];
 
   return (
+    // [AJUSTE] Dimensões exatas aplicadas aqui
     <div
-      className={`relative flex w-full max-w-[380px] p-1 bg-white border ${currentTheme.container} rounded-full shadow-inner`}
+      style={{ width: "231.38px", height: "42px" }}
+      className={`relative flex p-1 bg-white border ${currentTheme.container} rounded-full shadow-inner`}
     >
       {options.map((option) => (
         <button

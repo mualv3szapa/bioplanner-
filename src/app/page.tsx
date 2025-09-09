@@ -3,16 +3,14 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 
-// Componentes
+// Componentes e Assets (usando os caminhos do seu código)
 import { Header } from "@/components/Header";
 import { CarouselDoctors } from "@/components/Carrossel";
 import { StyledSwitch } from "@/components/Switch";
-
-// Assets
-import JeJLogo from "@/assets/Logos/JJLogoBranco.png";
+import JeJLogo from "@/assets/Logos/Opera Instantâneo_2025-09-08_103033_www.figma.com.png";
 import MulherSorrindo from "@/assets/photos/beautiful-young-girl-touching-her-face-youth-skin-care-concept 1.svg";
 
-// ... (Tipagens Physician, ViaCepResponse, etc. permanecem as mesmas) ...
+// Tipagens
 type PhysicianAddress = {
   id: number;
   street: string;
@@ -33,7 +31,7 @@ type ViaCepResponse = {
 };
 
 export default function Home() {
-  // ... (Toda a sua lógica de states e funções permanece exatamente a mesma) ...
+  // A lógica de states e funções está correta e permanece a mesma.
   const [tipoAtendimento, setTipoAtendimento] = useState<
     "presencial" | "online"
   >("presencial");
@@ -93,7 +91,7 @@ export default function Home() {
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (cepStatus !== "ok" || !viaCep) {
-      alert("Por favor, insira um CEP válido para iniciar a busca.");
+      alert("Por favor, insira um CEP válido.");
       return;
     }
     if (tipoPagamento === "convenio" && !selectedConvenio) {
@@ -119,189 +117,202 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white min-h-screen overflow-x-hidden">
       <Header />
 
-      <main className="px-5 py-8">
-        {/* [MUDANÇA PRINCIPAL] Trocado 'grid' por 'flex' para melhor controle responsivo */}
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-8 items-center">
-          {/* Coluna da Esquerda: Títulos e Formulário */}
-          <div className="w-full md:w-1/2 flex-shrink-0">
-            <h1 className="font-bold text-[#0F2167] text-3xl md:text-4xl leading-tight">
-              Busque sua nova versão
-            </h1>
-            <h2 className="text-gray-600 text-lg mt-2 mb-8">
-              com o apoio de dermatologistas{" "}
-              <span className="text-[#FF1935] font-bold">
-                em constante atualização sobre Psoríase
-              </span>
-            </h2>
+      <main>
+        <div className="px-5 py-8">
+          {/* [CORREÇÃO] Forcei layout lado-a-lado mesmo no mobile */}
+          <div className="max-w-5xl mx-auto flex flex-row items-center justify-center gap-4">
+            {/* Coluna 1: Formulário - ajustei para w-2/3 para caber ao lado da imagem no mobile */}
+            <div className="w-2/3 flex flex-col items-start order-1">
+              <h1 className="font-bold text-[#0F2167] text-3xl md:text-4xl leading-tight">
+                Busque sua nova versão
+              </h1>
+              <h2 className="text-gray-600 text-lg mt-2 mb-8 max-w-md">
+                com o apoio de dermatologistas{" "}
+                <span className="text-[#FF1935] font-bold">
+                  em constante atualização sobre Psoríase
+                </span>
+              </h2>
 
-            <form onSubmit={handleSearch} className="flex flex-col gap-5">
-              {/* Os componentes do formulário permanecem os mesmos */}
-              <StyledSwitch
-                theme="red"
-                selectedValue={tipoAtendimento}
-                onValueChange={setTipoAtendimento}
-                options={[
-                  { value: "online", label: "Online" },
-                  { value: "presencial", label: "Presencial" },
-                ]}
-              />
-              <StyledSwitch
-                theme="blue"
-                selectedValue={tipoPagamento}
-                onValueChange={setTipoPagamento}
-                options={[
-                  { value: "particular", label: "Particular" },
-                  { value: "convenio", label: "Convênio" },
-                ]}
-              />
-
-              {tipoPagamento === "convenio" && (
-                <select
-                  className="w-full max-w-[380px] h-14 rounded-full border border-gray-300 bg-white px-5 text-gray-600 shadow-sm focus:ring-2 focus:ring-[#0F2167] focus:border-transparent"
-                  value={selectedConvenio}
-                  onChange={(e) => setSelectedConvenio(e.target.value)}
-                >
-                  <option value="" disabled>
-                    Selecione seu convênio
-                  </option>
-                  {convenios.map((conv) => (
-                    <option key={conv} value={conv}>
-                      {conv}
-                    </option>
-                  ))}
-                </select>
-              )}
-
-              <div className="relative w-full max-w-[380px]">
-                <input
-                  type="text"
-                  placeholder="Digite seu CEP"
-                  inputMode="numeric"
-                  maxLength={9}
-                  value={cepMasked}
-                  onChange={handleCepChange}
-                  className="w-full h-14 rounded-full border border-gray-300 bg-white px-5 pr-12 text-gray-800 shadow-sm focus:ring-2 focus:ring-[#0F2167] focus:border-transparent"
-                />
-                <div className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 pointer-events-none">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-6 h-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
-                    />
-                  </svg>
-                </div>
-              </div>
-              <div className="min-h-[20px] text-sm px-2 -mt-3">
-                {cepStatus === "loading" && (
-                  <span className="text-gray-500">Consultando...</span>
-                )}
-                {cepStatus === "ok" && (
-                  <span className="text-gray-600">{enderecoPreview}</span>
-                )}
-                {cepStatus === "error" && (
-                  <span className="text-red-600">{cepError}</span>
-                )}
-              </div>
-
-              <button
-                type="submit"
-                disabled={cepStatus !== "ok" || searchStatus === "loading"}
-                className="w-full max-w-[380px] h-14 rounded-full bg-[#FF1935] text-white font-bold text-lg flex items-center justify-center gap-2 shadow-lg hover:bg-red-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+              <form
+                onSubmit={handleSearch}
+                className="flex flex-col gap-5 items-start"
               >
-                {searchStatus === "loading"
-                  ? "Buscando..."
-                  : "Buscar dermatologistas"}
-                {searchStatus !== "loading" && (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="currentColor"
-                    className="w-5 h-5"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                    />
-                  </svg>
-                )}
-              </button>
-            </form>
-          </div>
+                <StyledSwitch
+                  theme="red"
+                  selectedValue={tipoAtendimento}
+                  onValueChange={setTipoAtendimento}
+                  options={[
+                    { value: "online", label: "Online" },
+                    { value: "presencial", label: "Presencial" },
+                  ]}
+                />
+                <StyledSwitch
+                  theme="blue"
+                  selectedValue={tipoPagamento}
+                  onValueChange={setTipoPagamento}
+                  options={[
+                    { value: "particular", label: "Particular" },
+                    { value: "convenio", label: "Convênio" },
+                  ]}
+                />
 
-          {/* [MUDANÇA PRINCIPAL] Coluna da Direita: Imagem e Card. Agora visível em telas menores. */}
-          <div className="w-full md:w-1/2 flex justify-center items-center mt-8 md:mt-0">
-            <div className="relative w-[280px] sm:w-[320px] md:w-full max-w-[400px]">
-              <Image
-                src={MulherSorrindo}
-                alt="Mulher sorrindo tocando o rosto"
-                width={400}
-                height={600}
-                className="object-contain"
-                priority
-              />
-              {/* O card agora é posicionado em relação a este container */}
-              <div className="absolute -bottom-8 -right-4 sm:right-0 bg-white rounded-2xl shadow-2xl px-5 py-3 w-48 text-left">
-                <span className="text-[#FF1935] font-bold text-3xl leading-tight">
-                  +300
-                </span>
-                <span className="text-[#0F2167] text-sm leading-tight block mt-1">
-                  dermatologistas à sua disposição
-                </span>
+                {tipoPagamento === "convenio" && (
+                  <select
+                    style={{ width: "231.38px", height: "42px" }}
+                    className="rounded-full border border-gray-300 bg-white px-5 text-gray-600 shadow-sm focus:ring-2 focus:ring-[#0F2167] focus:border-transparent"
+                    value={selectedConvenio}
+                    onChange={(e) => setSelectedConvenio(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      Selecione seu convênio
+                    </option>
+                    {convenios.map((conv) => (
+                      <option key={conv} value={conv}>
+                        {conv}
+                      </option>
+                    ))}
+                  </select>
+                )}
+
+                <div
+                  className="relative"
+                  style={{ width: "231.38px", height: "42px" }}
+                >
+                  <input
+                    type="text"
+                    placeholder="Digite CEP, região ou endereço"
+                    inputMode="numeric"
+                    maxLength={9}
+                    value={cepMasked}
+                    onChange={handleCepChange}
+                    className="w-full h-full rounded-full border border-gray-300 bg-white px-5 pr-12 text-gray-800 text-sm shadow-sm focus:ring-2 focus:ring-[#0F2167] focus:border-transparent"
+                  />
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 pointer-events-none">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-6 h-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div className="min-h-[20px] text-sm px-2 -mt-3">
+                  {cepStatus === "ok" && (
+                    <span className="text-gray-600">{enderecoPreview}</span>
+                  )}
+                  {cepStatus === "error" && (
+                    <span className="text-red-600">{cepError}</span>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={cepStatus !== "ok" || searchStatus === "loading"}
+                  style={{ width: "231.38px", height: "42px" }}
+                  className="rounded-full bg-[#FF1935] text-white font-bold text-base flex items-center justify-center gap-2 shadow-lg hover:bg-red-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                >
+                  {searchStatus === "loading"
+                    ? "Buscando..."
+                    : "Buscar dermatologistas"}
+                  {searchStatus !== "loading" && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={2}
+                      stroke="currentColor"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                      />
+                    </svg>
+                  )}
+                </button>
+              </form>
+            </div>
+
+            {/* Coluna 2: Imagem - ajustada para w-1/3 e sem margem superior no mobile */}
+            <div className="w-1/3 flex-shrink-0 order-2 mt-0 md:mt-0 md:ml-[-100px]">
+              <div
+                className="relative mx-auto md:mx-0"
+                style={{ width: "200px", height: "250px" }}
+              >
+                <Image
+                  src={MulherSorrindo}
+                  alt="Mulher sorrindo tocando o rosto"
+                  fill
+                  className="object-contain"
+                  priority
+                />
               </div>
             </div>
           </div>
         </div>
+
+        {/* Container do Rodapé e Card +300 */}
+        <div className="relative mt-12">
+          {/* Rodapé Azul */}
+          <div className="w-full h-24 bg-[#0F2167] flex items-center px-5">
+            <div className="max-w-5xl mx-auto w-full relative">
+              <span className="text-white/70 text-xs absolute -top-6 left-0">
+                Apoio
+              </span>
+              <Image
+                src={JeJLogo}
+                width={150}
+                alt="Apoio Johnson & Johnson"
+                className="object-contain"
+              />
+            </div>
+          </div>
+
+          {/* Card +300 posicionado sobre o rodapé */}
+          <div className="absolute top-0 right-5 sm:right-10 md:right-20 lg:right-40 -translate-y-1/2 bg-white rounded-2xl shadow-2xl px-5 py-3 w-48 text-left">
+            <span className="text-[#FF1935] font-bold text-3xl leading-tight">
+              +300
+            </span>
+            <span className="text-[#0F2167] text-sm leading-tight block mt-1">
+              dermatologistas à sua disposição
+            </span>
+          </div>
+        </div>
       </main>
 
-      {/* Seção de Resultados e Rodapé permanecem os mesmos */}
-      <div className="w-full mt-8">
+      {/* Seção de Resultados */}
+      <div className="w-full px-5 mt-8">
         {searchStatus === "ok" && physicians.length > 0 && (
           <CarouselDoctors physicians={physicians} />
         )}
         {searchStatus === "ok" && physicians.length === 0 && (
           <p className="text-center text-gray-600 my-10">
-            Nenhum dermatologista encontrado com os critérios selecionados.
+            Nenhum dermatologista encontrado.
           </p>
         )}
         {searchStatus === "error" && (
           <p className="text-center text-red-600 my-10">
-            Ocorreu um erro ao buscar os médicos. Por favor, tente novamente.
+            Ocorreu um erro ao buscar os médicos.
           </p>
         )}
       </div>
-
-      <footer className="relative w-full h-24 bg-[#0F2167] flex items-center justify-start px-5 mt-16">
-        <div className="max-w-6xl mx-auto w-full relative">
-          <span className="text-white/70 text-xs absolute -top-6 left-0">
-            Apoio
-          </span>
-          <Image
-            src={JeJLogo}
-            width={150}
-            alt="Apoio Johnson & Johnson"
-            className="object-contain"
-          />
-        </div>
-      </footer>
     </div>
   );
 }
