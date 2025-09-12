@@ -9,6 +9,7 @@ import { CarouselDoctors } from "@/components/Carrossel";
 import { StyledSwitch } from "@/components/Switch";
 import JeJLogo from "@/assets/Logos/Opera Instantâneo_2025-09-08_103033_www.figma.com.png";
 import MulherSorrindo from "@/assets/photos/beautiful-young-girl-touching-her-face-youth-skin-care-concept 1.svg";
+import { MedList } from "@/components/MedList";
 
 // Tipagens
 type PhysicianAddress = {
@@ -122,10 +123,9 @@ export default function Home() {
 
       <main>
         <div className="px-5 py-8">
-          {/* [CORREÇÃO] Forcei layout lado-a-lado mesmo no mobile */}
-          <div className="max-w-5xl mx-auto flex flex-row items-center justify-center gap-4">
-            {/* Coluna 1: Formulário - ajustei para w-2/3 para caber ao lado da imagem no mobile */}
-            <div className="w-2/3 flex flex-col items-start order-1">
+          <div className="max-w-5xl mx-auto grid grid-cols-5 grid-rows-5 gap-4">
+            {/* Linha 1-2: título */}
+            <div className="col-span-5 row-span-2 pr-4">
               <h1 className="font-bold text-[#0F2167] text-3xl md:text-4xl leading-tight">
                 Busque sua nova versão
               </h1>
@@ -135,7 +135,10 @@ export default function Home() {
                   em constante atualização sobre Psoríase
                 </span>
               </h2>
+            </div>
 
+            {/* Linha 3-5: formulário */}
+            <div className="col-span-3 row-span-3 row-start-3 pr-6">
               <form
                 onSubmit={handleSearch}
                 className="flex flex-col gap-5 items-start"
@@ -212,6 +215,7 @@ export default function Home() {
                     </svg>
                   </div>
                 </div>
+
                 <div className="min-h-[20px] text-sm px-2 -mt-3">
                   {cepStatus === "ok" && (
                     <span className="text-gray-600">{enderecoPreview}</span>
@@ -250,17 +254,14 @@ export default function Home() {
               </form>
             </div>
 
-            {/* Coluna 2: Imagem - ajustada para w-1/3 e sem margem superior no mobile */}
-            <div className="w-1/3 flex-shrink-0 order-2 mt-0 md:mt-0 md:ml-[-100px]">
-              <div
-                className="relative mx-auto md:mx-0"
-                style={{ width: "200px", height: "250px" }}
-              >
+            {/* Linha 3-5: imagem */}
+            <div className="col-span-2 row-span-3 col-start-4 row-start-3 flex justify-end items-end p-0">
+              <div className="relative w-[140%] h-[120%] -mr-8 -mb-6">
                 <Image
                   src={MulherSorrindo}
                   alt="Mulher sorrindo tocando o rosto"
                   fill
-                  className="object-contain"
+                  className="object-cover object-bottom"
                   priority
                 />
               </div>
@@ -269,13 +270,10 @@ export default function Home() {
         </div>
 
         {/* Container do Rodapé e Card +300 */}
-        <div className="relative mt-12">
+        <div className="relative">
           {/* Rodapé Azul */}
           <div className="w-full h-24 bg-[#0F2167] flex items-center px-5">
             <div className="max-w-5xl mx-auto w-full relative">
-              <span className="text-white/70 text-xs absolute -top-6 left-0">
-                Apoio
-              </span>
               <Image
                 src={JeJLogo}
                 width={150}
@@ -286,11 +284,21 @@ export default function Home() {
           </div>
 
           {/* Card +300 posicionado sobre o rodapé */}
-          <div className="absolute top-0 right-5 sm:right-10 md:right-20 lg:right-40 -translate-y-1/2 bg-white rounded-2xl shadow-2xl px-5 py-3 w-48 text-left">
-            <span className="text-[#FF1935] font-bold text-3xl leading-tight">
+          <div
+            className="
+                absolute top-3 
+                right-4 sm:right-8 md:right-16 lg:right-32 
+                -translate-y-1/3
+              bg-white rounded-2xl shadow-2xl 
+                px-3 py-2 
+                w-36 sm:w-40 md:w-44 
+                text-left
+              "
+          >
+            <span className="text-[#FF1935] font-bold text-3xl sm:text-4xl leading-tight">
               +300
             </span>
-            <span className="text-[#0F2167] text-sm leading-tight block mt-1">
+            <span className="text-[#0F2167] text-sm sm:text-base leading-tight block mt-1">
               dermatologistas à sua disposição
             </span>
           </div>
@@ -300,7 +308,7 @@ export default function Home() {
       {/* Seção de Resultados */}
       <div className="w-full px-5 mt-8">
         {searchStatus === "ok" && physicians.length > 0 && (
-          <CarouselDoctors physicians={physicians} />
+          <MedList physicians={physicians} />
         )}
         {searchStatus === "ok" && physicians.length === 0 && (
           <p className="text-center text-gray-600 my-10">
