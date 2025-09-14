@@ -1,15 +1,19 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import Image from "next/image";
 
 // Componentes e Assets (usando os caminhos do seu código)
 import { Header } from "@/components/Header";
 import { CarouselDoctors } from "@/components/Carrossel";
 import { StyledSwitch } from "@/components/Switch";
-import JeJLogo from "@/assets/Logos/Opera Instantâneo_2025-09-08_103033_www.figma.com.png";
+import JeJLogo from "@/assets/Logos/JeJlogo.png";
 import MulherSorrindo from "@/assets/photos/beautiful-young-girl-touching-her-face-youth-skin-care-concept 1.svg";
 import { MedList } from "@/components/MedList";
+import { MedListSkeleton } from "@/components/MedList/MedListSkeleton"; // Importar o skeleton
+import { HealthPlanCombobox } from "@/components/Combobox";
+import secaoexplicando from "@/assets/photos/Group 35.svg"; // Importar o novo Combobox
+import { MessageSquareMore, Smartphone } from "lucide-react";
 
 // Tipagens
 type PhysicianAddress = {
@@ -32,7 +36,6 @@ type ViaCepResponse = {
 };
 
 export default function Home() {
-  // A lógica de states e funções está correta e permanece a mesma.
   const [tipoAtendimento, setTipoAtendimento] = useState<
     "presencial" | "online"
   >("presencial");
@@ -49,9 +52,28 @@ export default function Home() {
   const [cepError, setCepError] = useState<string | null>(null);
   const [physicians, setPhysicians] = useState<Physician[]>([]);
   const [searchStatus, setSearchStatus] = useState<
-    "idle" | "loading" | "ok" | "error"
+    "idle" | "loading" | "success" | "error"
   >("idle");
-  const convenios = ["Unimed", "Bradesco Saúde", "Amil", "SulAmérica"];
+  const [healthPlansList, setHealthPlansList] = useState<string[]>([]);
+
+  const fetchHealthPlans = useCallback(async () => {
+    try {
+      const response = await fetch("/api/healthplans");
+      if (!response.ok) {
+        throw new Error("Failed to fetch health plans");
+      }
+      const data = await response.json();
+      setHealthPlansList(data);
+    } catch (error) {
+      console.error("Error fetching health plans:", error);
+      // Fallback para lista estática em caso de erro
+      setHealthPlansList(["Unimed", "Bradesco Saúde", "Amil", "SulAmérica"]);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchHealthPlans();
+  }, [fetchHealthPlans]);
 
   const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, "").slice(0, 8);
@@ -100,7 +122,7 @@ export default function Home() {
       return;
     }
     setSearchStatus("loading");
-    setPhysicians([]);
+    setPhysicians([]); // Limpa a lista anterior enquanto carrega
     try {
       const params = new URLSearchParams({ city: viaCep.localidade });
       if (tipoPagamento === "convenio" && selectedConvenio) {
@@ -110,11 +132,17 @@ export default function Home() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Falha ao buscar médicos.");
       setPhysicians(data);
-      setSearchStatus("ok");
+      setSearchStatus("success");
     } catch (error: any) {
       console.error("Erro no handleSearch:", error);
       setSearchStatus("error");
     }
+  };
+  const scrollToForm = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   return (
@@ -163,21 +191,11 @@ export default function Home() {
                 />
 
                 {tipoPagamento === "convenio" && (
-                  <select
-                    style={{ width: "231.38px", height: "42px" }}
-                    className="rounded-full border border-gray-300 bg-white px-5 text-gray-600 shadow-sm focus:ring-2 focus:ring-[#0F2167] focus:border-transparent"
-                    value={selectedConvenio}
-                    onChange={(e) => setSelectedConvenio(e.target.value)}
-                  >
-                    <option value="" disabled>
-                      Selecione seu convênio
-                    </option>
-                    {convenios.map((conv) => (
-                      <option key={conv} value={conv}>
-                        {conv}
-                      </option>
-                    ))}
-                  </select>
+                  <HealthPlanCombobox
+                    healthPlans={healthPlansList}
+                    selectedHealthPlan={selectedConvenio}
+                    onSelectHealthPlan={setSelectedConvenio}
+                  />
                 )}
 
                 <div
@@ -186,7 +204,7 @@ export default function Home() {
                 >
                   <input
                     type="text"
-                    placeholder="Digite CEP, região ou endereço"
+                    placeholder="Digite CEP"
                     inputMode="numeric"
                     maxLength={9}
                     value={cepMasked}
@@ -276,7 +294,7 @@ export default function Home() {
             <div className="max-w-5xl mx-auto w-full relative">
               <Image
                 src={JeJLogo}
-                width={150}
+                width={200}
                 alt="Apoio Johnson & Johnson"
                 className="object-contain"
               />
@@ -298,7 +316,7 @@ export default function Home() {
             <span className="text-[#FF1935] font-bold text-3xl sm:text-4xl leading-tight">
               +300
             </span>
-            <span className="text-[#0F2167] text-sm sm:text-base leading-tight block mt-1">
+            <span className="text-[#0F2167] text-sm sm:text-base leading-tight block mt-1 font-semibold">
               dermatologistas à sua disposição
             </span>
           </div>
@@ -306,20 +324,90 @@ export default function Home() {
       </main>
 
       {/* Seção de Resultados */}
-      <div className="w-full px-5 mt-8">
-        {searchStatus === "ok" && physicians.length > 0 && (
+      <div className="w-full px-5 mt-8 flex justify-center items-center">
+        {searchStatus === "loading" ? (
+          <MedListSkeleton />
+        ) : physicians.length > 0 ? (
           <MedList physicians={physicians} />
-        )}
-        {searchStatus === "ok" && physicians.length === 0 && (
+        ) : searchStatus === "success" ? (
           <p className="text-center text-gray-600 my-10">
             Nenhum dermatologista encontrado.
           </p>
-        )}
-        {searchStatus === "error" && (
-          <p className="text-center text-red-600 my-10">
-            Ocorreu um erro ao buscar os médicos.
+        ) : (
+          <p className="text-center text-gray-600 my-10">
+            Use os filtros para buscar dermatologistas.
           </p>
         )}
+      </div>
+
+      {/* Seção Psoríase */}
+      <section className="relative w-full flex flex-col items-center bg-white mt-12">
+        {/* Texto principal */}
+        <div className="flex flex-col justify-center items-start text-left px-6">
+          <h1 className="text-[#FF1935] text-2xl">Você não precisa conviver</h1>
+          <h1 className="text-[#FF1935] text-2xl font-bold">
+            com os incômodos da Psoríase!
+          </h1>
+          <p className="text-[#0F2167] text-sm mt-2">
+            Receba orientações e prescrições de tratamento
+          </p>
+          <p className="text-[#0F2167] text-sm font-bold">
+            de acordo com o seu perfil
+          </p>
+        </div>
+
+        {/* Imagem + Cards */}
+        <div className="relative w-full h-[480px] mt-6">
+          <Image
+            src={secaoexplicando}
+            alt="Explicação"
+            fill
+            className="object-cover"
+          />
+
+          {/* Card superior */}
+          <div className="absolute top-6 right-4 w-[260px] h-[69px] bg-white shadow-md rounded-xl px-4 py-3 flex flex-row gap-1.5 justify-center items-center">
+            <MessageSquareMore size={76} color="#0F2167" />
+            <p className="text-[#0F2167] text-[13px]">
+              Receba uma segunda opinião do seu caso e{" "}
+              <span className="font-bold">
+                conheça novas opções de tratamento
+              </span>
+            </p>
+          </div>
+
+          {/* Card inferior */}
+          <div className="absolute bottom-20 right-4 w-[245px] h-[72px] bg-white shadow-md rounded-xl px-4 py-3 flex flex-row gap-1.5 justify-center items-center">
+            <Smartphone color="#0F2167" size={96} />
+            <p className="text-[#0F2167] text-[13px]">
+              <span className="font-bold">Marque sua consulta via </span>
+              <span className="font-bold">WhatsApp</span> de forma simples e
+              rápida! Sem burocracia
+            </p>
+          </div>
+        </div>
+
+        {/* Botão sobreposto */}
+        <button
+          onClick={scrollToForm}
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 
+       w-[220px] h-[46px] bg-[#FF1935] text-white font-bold text-[20px] 
+       rounded-full shadow-[0px_13px_22px_0px_rgba(0,_0,_0,_0.1)]"
+        >
+          Agende sua consulta
+        </button>
+      </section>
+
+      <div>
+        <h1>
+          <span></span>
+        </h1>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
       </div>
     </div>
   );

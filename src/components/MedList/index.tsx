@@ -27,7 +27,7 @@ export function MedList({ physicians }: MedListProps) {
     <ScrollArea className="w-[85%] h-72 rounded-md border">
       <div className="p-4 space-y-2">
         {physicians.map((physician, index) => (
-          <div key={physician.id}>
+          <div key={physician.id} className="animate-fadeIn">
             <div className="w-full h-[75px] flex flex-row justify-between items-center rounded-2xl px-2 gap-3">
               {/* Texto */}
               <div className="flex flex-col flex-1 min-w-0">
