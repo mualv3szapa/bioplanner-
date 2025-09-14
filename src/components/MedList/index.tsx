@@ -14,7 +14,7 @@ type PhysicianAddress = {
 type Physician = {
   id: number;
   name: string;
-  specialty: string;
+  specialty?: string;
   addresses: PhysicianAddress[];
 };
 

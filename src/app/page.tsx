@@ -25,7 +25,13 @@ type PhysicianAddress = {
   cep: string;
   distance?: number;
 };
-type Physician = { id: number; name: string; addresses: PhysicianAddress[] };
+type Physician = {
+  id: number;
+  name: string;
+  specialty?: string;
+  addresses: PhysicianAddress[];
+};
+
 type ViaCepResponse = {
   cep: string;
   logradouro: string;
