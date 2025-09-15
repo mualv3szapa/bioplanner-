@@ -14,6 +14,8 @@ import { MedListSkeleton } from "@/components/MedList/MedListSkeleton"; // Impor
 import { HealthPlanCombobox } from "@/components/Combobox";
 import secaoexplicando from "@/assets/photos/Group 35.svg"; // Importar o novo Combobox
 import { MessageSquareMore, Smartphone } from "lucide-react";
+import MobileRecommendation from "@/components/MobileRecommendation";
+import BPLogo from "@/assets/Logos/Simbolo arredondado (1) 2.png"
 
 // Tipagens
 type PhysicianAddress = {
@@ -24,6 +26,7 @@ type PhysicianAddress = {
   city: { name: string; state: { id: string } };
   cep: string;
   distance?: number;
+  whatsappNumber: string | null;
 };
 type Physician = {
   id: number;
@@ -404,17 +407,27 @@ export default function Home() {
         </button>
       </section>
 
-      <div>
-        <h1>
-          <span></span>
+      <div className="flex flex-col justify-center items-center mt-34 p-5 text-justify">
+        <h1 className="text-2xl text-[#0F2167]">
+          O Bioplanner conecta você
+          <span className="font-bold"> aos melhores dermatologistas </span>em constante atualização
+          sobre Psoríase
         </h1>
-        <div></div>
+        <div className="w-[80%] h-[114px] rounded-4xl bg-[#0F2167] p-3.5">
+          <Image 
+            src={BPLogo}
+            width={30}
+            height={30}
+            alt="logo"          
+            />
+        </div>
         <div></div>
         <div></div>
         <div></div>
         <div></div>
         <div></div>
       </div>
+      <MobileRecommendation />
     </div>
   );
 }
