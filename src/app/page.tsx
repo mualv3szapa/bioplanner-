@@ -15,7 +15,7 @@ import { HealthPlanCombobox } from "@/components/Combobox";
 import secaoexplicando from "@/assets/photos/Group 35.svg"; // Importar o novo Combobox
 import { MessageSquareMore, Smartphone } from "lucide-react";
 import MobileRecommendation from "@/components/MobileRecommendation";
-import BPLogo from "@/assets/Logos/Simbolo arredondado (1) 2.png"
+import BPLogo from "@/assets/Logos/Simbolo arredondado (1) 2.png";
 
 // Tipagens
 type PhysicianAddress = {
@@ -407,21 +407,30 @@ export default function Home() {
         </button>
       </section>
 
-      <div className="flex flex-col justify-center items-center mt-34 p-5 text-justify">
-        <h1 className="text-2xl text-[#0F2167]">
+      <div className="flex flex-col justify-center items-center mt-26 text-justify">
+        <h1 className="text-2xl text-[#0F2167] w-[90%]">
           O Bioplanner conecta você
-          <span className="font-bold"> aos melhores dermatologistas </span>em constante atualização
-          sobre Psoríase
+          <span className="font-bold"> aos melhores dermatologistas </span>em
+          constante atualização sobre Psoríase
         </h1>
-        <div className="w-[80%] h-[114px] rounded-4xl bg-[#0F2167] p-3.5">
-          <Image 
-            src={BPLogo}
-            width={30}
-            height={30}
-            alt="logo"          
-            />
+        <div className="w-[90%] h-[214px] rounded-3xl bg-[#0F2167] p-3.5 mt-8 gap-3">
+          <Image src={BPLogo} width={30} height={30} alt="logo" />
+          <p className="text-white">
+            Nossa plataforma é usada em todo o Brasil para guiar os
+            dermatologistas no processo de diagnóstico e prescrição do
+            medicamento de acordo com com o perfil do paciente.{" "}
+            <span className="font-semibold">
+              Agora você pode ter acesso a todos esses médicos e se conectar de
+              forma répida e segura
+            </span>
+          </p>
         </div>
-        <div></div>
+        <div className="bg-[#FF1935] w-[50%] h-[200px] rounded-3xl p-3.5 mt-4">
+          <Image src={BPLogo} width={30} height={30} alt="logo" /> 
+          <h2 className="text-white">+300</h2>
+          <h2 className="text-white">dermatologistas</h2>
+          <p className="text-white">em constante atualização sobre os novos tratamentos para Psoríase</p>
+        </div>
         <div></div>
         <div></div>
         <div></div>
